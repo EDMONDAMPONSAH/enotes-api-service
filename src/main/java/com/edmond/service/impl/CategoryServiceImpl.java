@@ -2,6 +2,7 @@ package com.edmond.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -46,17 +47,39 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<CategoryDto> getAllCategory() {
-		List<Category> categories = cRepo.findAll();
+		List<Category> categories = cRepo.findByIsDeletedFalse();
 		List<CategoryDto> categoryDtoList = categories.stream().map(cat -> mapper.map(cat, CategoryDto.class)).toList();
 		return categoryDtoList;
 	}
 
 	@Override
 	public List<CategoryResponse> getActiveCategory() {
-		List<Category> categories = cRepo.findByIsActiveTrue();
+		List<Category> categories = cRepo.findByIsActiveTrueAndIsDeletedFalse();
 		List<CategoryResponse> activeCategoryList = categories.stream()
 				.map(cat -> mapper.map(cat, CategoryResponse.class)).toList();
 		return activeCategoryList;
+	}
+
+	@Override
+	public CategoryDto getCategoryById(Long id) {
+		Optional<Category> findByCategory = cRepo.findByIdAndIsDeletedFalse(id);
+		if (findByCategory.isPresent()) {
+			Category category = findByCategory.get();
+			return mapper.map(category, CategoryDto.class);
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean deleteCategory(Long id) {
+		Optional<Category> findByCategory = cRepo.findById(id);
+		if (findByCategory.isPresent()) {
+			Category category = findByCategory.get();
+			category.setIsDeleted(true);
+			cRepo.save(category);
+			return true;
+		}
+		return false;
 	}
 
 }
