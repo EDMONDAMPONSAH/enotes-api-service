@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edmond.dto.CategoryDto;
 import com.edmond.dto.CategoryResponse;
 import com.edmond.entity.Category;
+import com.edmond.exception.ResourceNotFoundException;
 import com.edmond.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -59,13 +60,9 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Long id) {
+	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Long id) throws ResourceNotFoundException {
 		CategoryDto categoryDto = cService.getCategoryById(id);
-		if (ObjectUtils.isEmpty(categoryDto)) {
-			return new ResponseEntity<>("Category not found with id=" + id, HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity<>(categoryDto, HttpStatus.OK);
-		}
+		return new ResponseEntity<>(categoryDto, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

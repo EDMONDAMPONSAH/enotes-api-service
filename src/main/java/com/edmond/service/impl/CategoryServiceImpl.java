@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import com.edmond.dto.CategoryDto;
 import com.edmond.dto.CategoryResponse;
 import com.edmond.entity.Category;
+import com.edmond.exception.ResourceNotFoundException;
 import com.edmond.repository.CategoryRepository;
 import com.edmond.service.CategoryService;
 
@@ -56,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 			category.setCreatedBy(existCategory.getCreatedBy());
 			category.setCreatedOn(existCategory.getCreatedOn());
 			category.setUpdatedBy(1);
-			category.setIsDeleted(existCategory.getIsDeleted());
+			// category.setIsDeleted(existCategory.getIsDeleted());
 			category.setUpdatedOn(new Date());
 		}
 	}
@@ -77,13 +78,10 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDto getCategoryById(Long id) {
-		Optional<Category> findByCategory = cRepo.findByIdAndIsDeletedFalse(id);
-		if (findByCategory.isPresent()) {
-			Category category = findByCategory.get();
-			return mapper.map(category, CategoryDto.class);
-		}
-		return null;
+	public CategoryDto getCategoryById(Long id) throws ResourceNotFoundException {
+		Category category = cRepo.findByIdAndIsDeletedFalse(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+		return mapper.map(category, CategoryDto.class);
 	}
 
 	@Override
