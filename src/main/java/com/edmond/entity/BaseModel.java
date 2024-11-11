@@ -15,6 +15,6 @@ public class BaseModel {
 	private Boolean isDeleted;
 	private Integer createdBy;
 	private Date createdOn;
-	private Long updatedBy;
+	private Integer updatedBy;
 	private Date updatedOn;
 }
