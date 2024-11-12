@@ -14,6 +14,7 @@ import com.edmond.entity.Category;
 import com.edmond.exception.ResourceNotFoundException;
 import com.edmond.repository.CategoryRepository;
 import com.edmond.service.CategoryService;
+import com.edmond.util.Validation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository cRepo;
 	private final ModelMapper mapper;
-
+	private final Validation validation;
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
 
@@ -32,6 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
 		 * category.setDescription(categoryDto.getDescription());
 		 * category.setIsActive(categoryDto.getIsActive());
 		 */
+
+		// Validation checking
+		validation.categoryValidation(categoryDto);
 
 		Category category = mapper.map(categoryDto, Category.class);
 
