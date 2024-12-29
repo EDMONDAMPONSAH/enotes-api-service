@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import com.edmond.dto.CategoryDto;
 import com.edmond.dto.CategoryResponse;
 import com.edmond.entity.Category;
+import com.edmond.exception.ExistDataException;
 import com.edmond.exception.ResourceNotFoundException;
 import com.edmond.repository.CategoryRepository;
 import com.edmond.service.CategoryService;
@@ -36,6 +37,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 		// Validation checking
 		validation.categoryValidation(categoryDto);
+		
+		// check category exist or not
+		Boolean exist=cRepo.existsByName(categoryDto.getName().trim());
+		if(exist) {
+			throw new ExistDataException("Category already exist");
+		}
+		
 
 		Category category = mapper.map(categoryDto, Category.class);
 

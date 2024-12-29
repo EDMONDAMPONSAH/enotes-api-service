@@ -19,6 +19,7 @@ import com.edmond.dto.CategoryResponse;
 import com.edmond.entity.Category;
 import com.edmond.exception.ResourceNotFoundException;
 import com.edmond.service.CategoryService;
+import com.edmond.util.CommonUtil;
 import com.edmond.util.Validation;
 
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,11 @@ public class CategoryController {
 
 		Boolean saveCategory = cService.saveCategory(categoryDto);
 		if (saveCategory) {
-			return new ResponseEntity<>("successfully saved", HttpStatus.CREATED);
+			return CommonUtil.createBuildResponseMessage("successfuly saved", HttpStatus.CREATED);
+		//	return new ResponseEntity<>("successfully saved", HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>("failed to save", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("failed to save", HttpStatus.INTERNAL_SERVER_ERROR);
+			//return new ResponseEntity<>("failed to save", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -47,7 +50,8 @@ public class CategoryController {
 		if (CollectionUtils.isEmpty(allCategory)) {
 			return ResponseEntity.noContent().build();
 		} else {
-			return new ResponseEntity<>(allCategory, HttpStatus.OK);
+			return CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
+			//return new ResponseEntity<>(allCategory, HttpStatus.OK);
 		}
 	}
 
@@ -57,23 +61,30 @@ public class CategoryController {
 		if (CollectionUtils.isEmpty(allCategory)) {
 			return ResponseEntity.noContent().build();
 		} else {
-			return new ResponseEntity<>(allCategory, HttpStatus.OK);
+			return CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
+		//	return new ResponseEntity<>(allCategory, HttpStatus.OK);
 		}
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Long id) throws ResourceNotFoundException {
 		CategoryDto categoryDto = cService.getCategoryById(id);
-		return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+		if(ObjectUtils.isEmpty(categoryDto)) {
+			return CommonUtil.createBuildResponse("Internal Server Error", HttpStatus.NO_CONTENT);
+		}
+		return CommonUtil.createBuildResponse(categoryDto, HttpStatus.OK);
+		//return new ResponseEntity<>(categoryDto, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Long id) {
 		Boolean deleted = cService.deleteCategory(id);
 		if (deleted) {
-			return new ResponseEntity<>("Deleted sucessfully", HttpStatus.OK);
+			return CommonUtil.createBuildResponse("Deleted sucessfully", HttpStatus.OK);
+			//return new ResponseEntity<>("Deleted sucessfully", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("Category not found with id=", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("Category not found", HttpStatus.INTERNAL_SERVER_ERROR);
+			//return new ResponseEntity<>("Category not found with id=", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
