@@ -1,5 +1,7 @@
 package com.edmond.exception;
 
+import java.io.FileNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -47,5 +49,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
 	//	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e) {
+	//	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 }
