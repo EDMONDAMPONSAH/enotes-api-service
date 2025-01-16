@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.edmond.dto.NotesDto;
+import com.edmond.dto.NotesResponse;
 import com.edmond.entity.FileDetails;
 import com.edmond.service.NotesService;
 import com.edmond.util.CommonUtil;
@@ -71,6 +72,18 @@ public class NotesController {
 		if (CollectionUtils.isEmpty(notes)) {
 			return ResponseEntity.noContent().build();
 		}
+		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+	}
+	
+	@GetMapping("/user-notes")
+	public ResponseEntity<?> getAllNotesByUser(@RequestParam(name="pageNo",defaultValue="0")Integer pageNo,
+			@RequestParam(name="pageSize",defaultValue="2")Integer pageSize) {
+		Integer userId=2;
+		NotesResponse notes = nService.getAllNotesByUser(userId,pageNo,pageSize);
+		/*
+		 * if (CollectionUtils.isEmpty(notes)) { return
+		 * ResponseEntity.noContent().build(); }
+		 */
 		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
 	}
 
