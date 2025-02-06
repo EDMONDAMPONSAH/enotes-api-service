@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,5 +87,39 @@ public class NotesController {
 		 */
 		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
 	}
+	
+	@GetMapping("/delete/{id}")
+	public ResponseEntity<?> deleteNotes(@PathVariable Long id) throws Exception{
+		nService.softDeleteNotes(id);
+		return CommonUtil.createBuildResponseMessage("Deleted Successfully", HttpStatus.OK);
+	}
 
+	@GetMapping("/restore/{id}")
+	public ResponseEntity<?> restoreNotes(@PathVariable Long id) throws Exception{
+		nService.restoreNotes(id);
+		return CommonUtil.createBuildResponseMessage("Notes Restored Successfully", HttpStatus.OK);
+	}
+	
+	@GetMapping("/recycleBin")
+	public ResponseEntity<?> getuserRecycleBinNotes() throws Exception{
+		Integer userId=2;
+		List<NotesDto>notes=nService.getUserRecycleBinNotes(userId);
+		if(CollectionUtils.isEmpty(notes)) {
+			return CommonUtil.createBuildResponseMessage("Notes not available in recycle bin", HttpStatus.OK);
+		}
+		return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<?> hardDeleteNotes(@PathVariable Long id) throws Exception{
+		nService.hardDeleteNotes(id);
+		return CommonUtil.createBuildResponseMessage("Deleted Successfully", HttpStatus.OK);
+	}
+	
+	@GetMapping("/emptyRecycleBin")
+	public ResponseEntity<?> emptyRecycleBin() throws Exception{
+		Integer userId=2;
+		nService.emptyRecycleBin(userId);
+		return CommonUtil.createBuildResponseMessage("Emptied Recycle Bin Successfully", HttpStatus.OK);
+	}
 }

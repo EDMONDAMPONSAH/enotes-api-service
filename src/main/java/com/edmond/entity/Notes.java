@@ -1,5 +1,7 @@
 package com.edmond.entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -30,5 +32,6 @@ public class Notes extends BaseModel{
 	private Category category;
 	@ManyToOne
 	private FileDetails fileDetails;
+	private LocalDateTime deletedOn;
 	
 }

@@ -1,8 +1,8 @@
 package com.edmond.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.edmond.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +23,8 @@ public class NotesDto {
 	private Integer updatedBy;
 	private Date updatedOn;
 	private FilesDto fileDetails;
+	private Boolean isDeleted;
+	private LocalDateTime deletedOn;
 	
 	@AllArgsConstructor
 	@NoArgsConstructor
